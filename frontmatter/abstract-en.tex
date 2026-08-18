@@ -1,0 +1,18 @@
+\thispagestyle{empty}
+\begin{latin}
+\sloppy
+\hbadness=2500 % کنترل هشدارهای کم‌اهمیت ناشی از واژه‌های مرکب انگلیسی
+% عنوان این صفحه عمداً با \chapter* ساخته نشده است؛ زیرا قلم فارسی B Titr
+% حروف لاتین ندارد و در آن حالت واژه Abstract به‌صورت مربع نمایش داده می‌شود.
+{\bfseries\fontsize{20pt}{28pt}\selectfont Abstract\par}
+\vspace{1.1cm}
+
+Microgrids integrate distributed energy resources, energy storage systems, and local loads into a flexible platform for energy supply. Their energy-management problem requires simultaneous decisions about generation, storage, grid exchange, and load satisfaction while respecting economic objectives and physical operating constraints. Purely data-driven deep-learning models may produce physically inconsistent outputs when training data are scarce or when they are evaluated outside the training distribution.
+
+This undergraduate project investigates the application of physics-informed neural networks to microgrid energy management and control. In the proposed framework, the data mismatch is combined with residuals associated with power balance, battery state-of-charge dynamics, and operational limits. The initial model represents a grid-connected microgrid containing photovoltaic generation, battery storage, local demand, and power exchange with the utility grid. Python and PyTorch are considered for implementation, while automatic differentiation is used to construct the physics-related terms of the training objective.
+
+The final evaluation can compare the physics-informed model with a purely data-driven neural network using prediction error, power-balance residual, constraint-violation rate, and operating cost. This document establishes the theoretical framework, implementation structure, and evaluation protocol; numerical findings should be added only after the corresponding experiments have been performed.
+
+\vspace{0.6cm}
+\noindent\textbf{Keywords:} \KeywordsEn
+\end{latin}

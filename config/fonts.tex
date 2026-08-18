@@ -1,0 +1,54 @@
+% =========================================================
+% تنظیم قلم‌ها
+% برای تغییر قلم‌ها فقط همین فایل را ویرایش کنید.
+% قلم‌های رسمی در اولویت‌اند و در نبود آن‌ها قلم آزاد جایگزین می‌شود.
+% =========================================================
+
+\IfFontExistsTF{B Mitra}{%
+  \settextfont[Scale=1.05,AutoFakeBold=2]{B Mitra}
+}{%
+  \IfFontExistsTF{Amiri}{%
+    \settextfont[Scale=1.00]{Amiri}
+  }{%
+    \settextfont{FreeSerif}
+  }
+}
+
+% B Mitra همه نویسه‌های ریاضی فارسی (از جمله U+066A) را ندارد؛ بنابراین
+% قلم ارقام و نمادهای ریاضی مستقل و از یک قلم کامل انتخاب می‌شود.
+\IfFontExistsTF{Amiri}{%
+  \setdigitfont{Amiri}
+}{%
+  \IfFontExistsTF{FreeSerif}{%
+    \setdigitfont{FreeSerif}
+  }{%
+    \setdigitfont{DejaVu Sans}
+  }
+}
+
+\IfFontExistsTF{B Nazanin}{%
+  \defpersianfont\HeadingFont[Scale=1.05,AutoFakeBold=2,AutoFakeSlant=0.15]{B Nazanin}
+}{%
+  \IfFontExistsTF{Amiri}{%
+    \defpersianfont\HeadingFont[AutoFakeBold=2,AutoFakeSlant=0.15]{Amiri}
+  }{%
+    \defpersianfont\HeadingFont[AutoFakeBold=2,AutoFakeSlant=0.15]{FreeSerif}
+  }
+}
+
+\IfFontExistsTF{B Titr}{%
+  \defpersianfont\TitleFont[Scale=1.00,AutoFakeBold=2]{B Titr}
+}{%
+  \IfFontExistsTF{Amiri}{%
+    \defpersianfont\TitleFont[Scale=1.00,AutoFakeBold=2]{Amiri}
+  }{%
+    \defpersianfont\TitleFont[AutoFakeBold=2]{FreeSerif}
+  }
+}
+
+\IfFontExistsTF{Times New Roman}{%
+  \setlatintextfont{Times New Roman}
+}{%
+  \setlatintextfont{TeX Gyre Termes}
+}
+

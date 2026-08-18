@@ -1,0 +1,161 @@
+% اندازه و فاصله متن اصلی مطابق دستورالعمل دانشگاه
+\AtBeginDocument{\fontsize{14pt}{21pt}\selectfont}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+
+% شماره صفحه در وسط پایین صفحه؛ سبک plain استاندارد دقیقاً همین چینش را دارد.
+% استفاده نکردن از fancyhdr، سازگاری بهتری با bidi و xepersian ایجاد می‌کند.
+\pagestyle{plain}
+
+% قالب عنوان فصل و بخش‌ها
+\titleformat{\chapter}[display]
+  {\centering\TitleFont\bfseries\fontsize{16pt}{24pt}\selectfont}
+  {فصل \thechapter}
+  {0.5em}
+  {}
+\titleformat{name=\chapter,numberless}[display]
+  {\centering\TitleFont\bfseries\fontsize{16pt}{24pt}\selectfont}
+  {}
+  {0pt}
+  {}
+\titlespacing*{\chapter}{0pt}{-10pt}{28pt}
+
+\titleformat{\section}
+  {\HeadingFont\bfseries\itshape\fontsize{14pt}{21pt}\selectfont}
+  {\thesection}
+  {0.75em}
+  {}
+\titlespacing*{\section}{0pt}{21pt}{7pt}
+
+\titleformat{\subsection}
+  {\HeadingFont\bfseries\itshape\fontsize{14pt}{21pt}\selectfont}
+  {\thesubsection}
+  {0.75em}
+  {}
+\titlespacing*{\subsection}{0pt}{14pt}{5pt}
+
+\titleformat{\subsubsection}
+  {\HeadingFont\bfseries\fontsize{13pt}{19pt}\selectfont}
+  {\thesubsubsection}
+  {0.75em}
+  {}
+
+% جداکننده شماره فصل، بخش، شکل، جدول و رابطه مطابق دستورالعمل دانشگاه.
+\SepMark{-}
+
+% bidi ترتیب اجزای شماره را در متن راست‌به‌چپ معکوس می‌کند. برای آنکه خروجی
+% چاپی به شکل «شماره فصل-شماره بخش» دیده شود، ترتیب داخلی شمارنده‌ها برعکس
+% تعریف می‌شود. این فرمان باید پس از \begin{document} اجرا شود.
+\makeatletter
+\newcommand{\ApplyBonabNumbering}{%
+  \renewcommand{\thesection}{\arabic{section}\@SepMark\thechapter}%
+  \renewcommand{\thesubsection}{\arabic{subsection}\@SepMark\arabic{section}\@SepMark\thechapter}%
+  \renewcommand{\thesubsubsection}{\arabic{subsubsection}\@SepMark\arabic{subsection}\@SepMark\arabic{section}\@SepMark\thechapter}%
+  \renewcommand{\thefigure}{\arabic{figure}\@SepMark\thechapter}%
+  \renewcommand{\thetable}{\arabic{table}\@SepMark\thechapter}%
+  \renewcommand{\theequation}{\arabic{equation}\@SepMark\thechapter}%
+  \renewcommand{\thedefinition}{\arabic{definition}\@SepMark\thechapter}%
+}
+\makeatother
+
+% فرمول‌ها از حاشیه چپ آغاز می‌شوند و شماره رابطه در سمت راست قرار می‌گیرد.
+\setlength{\mathindent}{0pt}
+
+% عنوان شکل‌ها و جدول‌ها با اندازه ۱۰ پوینت مطابق دستورالعمل دانشگاه
+\DeclareCaptionFont{bonabcaption}{\fontsize{10pt}{15pt}\selectfont}
+\captionsetup{
+  font={bonabcaption,stretch=1.15},
+  labelfont=bf,
+  justification=centering,
+  singlelinecheck=false,
+  labelsep=period
+}
+\captionsetup[table]{position=top,skip=7pt}
+\captionsetup[figure]{position=bottom,skip=7pt}
+
+% فهرست‌ها
+% از گلوله ریاضی استفاده می‌شود تا نبود نویسه bullet در B Mitra مربع نسازد.
+\setlist[itemize]{label={\ensuremath{\bullet}},topsep=4pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt,parsep=0pt}
+
+% محیط‌های علمی
+\theoremstyle{definition}
+\newtheorem{definition}{تعریف}[chapter]
+\newtheorem{example}[definition]{مثال}
+\theoremstyle{plain}
+\newtheorem{theorem}[definition]{قضیه}
+\newtheorem{lemma}[definition]{لم}
+\newtheorem{proposition}[definition]{گزاره}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{ملاحظه}
+\renewcommand{\proofname}{برهان}
+
+% نمایش کد برنامه‌نویسی
+\definecolor{codebg}{RGB}{247,248,250}
+\definecolor{codecomment}{RGB}{45,125,70}
+\definecolor{codekeyword}{RGB}{25,65,150}
+\definecolor{codestring}{RGB}{160,65,45}
+% محیط listing چپ‌به‌راست است؛ قلم فارسی باید در خود نام «کد» اعمال شود.
+\renewcommand{\lstlistingname}{{\HeadingFont کد}}
+\renewcommand{\lstlistlistingname}{فهرست کدها}
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  commentstyle=\color{codecomment},
+  stringstyle=\color{codestring},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{black!20},
+  numbers=left,
+  numberstyle=\tiny\color{black!55},
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  tabsize=4,
+  captionpos=b,
+  xleftmargin=1.5em,
+  framexleftmargin=1.2em
+}
+\lstset{style=pythonstyle}
+
+% سبک‌های نمودار TikZ
+\tikzset{
+  block/.style={draw,rounded corners,minimum width=3.2cm,minimum height=1.05cm,align=center,fill=blue!5},
+  loss/.style={draw,rounded corners,minimum width=3.2cm,minimum height=1.05cm,align=center,fill=orange!10},
+  flow/.style={-{Latex[length=2.5mm]},thick}
+}
+
+% دستورهای کمکی
+% ارجاع عددی در متن فارسی با قلم لاتین حروف‌چینی می‌شود تا فونت‌هایی مانند
+% B Mitra که پوشش کامل ASCII ندارند، براکت یا کلید منبع را مربع نکنند.
+\newcommand{\pcite}[1]{\lr{\cite{#1}}}
+
+\newcommand{\unnumberedchapter}[1]{%
+  \chapter*{#1}%
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{#1}%
+}
+\newcommand{\preliminarynumbering}{%
+  \cleardoublepage
+  \pagenumbering{harfi}% شیوه حرفی فارسی در xepersian
+  \hypersetup{pageanchor=true}% جلوگیری از مقصدهای تکراری در PDF
+  \pagestyle{plain}
+}
+\newcommand{\mainnumbering}{%
+  \hypersetup{pageanchor=false}% هنگام بازنشانی شماره صفحه، لنگر موقتاً غیرفعال است.
+  \cleardoublepage
+  \pagenumbering{arabic}
+  \hypersetup{pageanchor=true}
+  \pagestyle{plain}
+}
+
+% مشخصات PDF
+\hypersetup{
+  pdftitle={\ProjectTitleEn},
+  pdfauthor={\StudentNameEn},
+  pdfsubject={B.Sc. Project in Computer Science},
+  pdfkeywords={physics-informed neural networks, microgrid, energy management}
+}

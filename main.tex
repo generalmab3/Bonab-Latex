@@ -1,0 +1,96 @@
+% !TeX program = xelatex
+% !BIB program = biber
+% !TeX TXS-program:compile = txs:///xelatex
+% !TeX TXS-program:bibliography = txs:///biber
+% برای خروجی کامل از build.bat / build.sh یا latexmk -xelatex main.tex استفاده کنید.
+% قالب پروژه کارشناسی دانشگاه بناب
+\documentclass[12pt,a4paper,oneside,fleqn]{report}
+
+\input{config/packages}
+\input{config/metadata}
+\input{config/fonts}
+\input{config/style}
+
+\begin{document}
+\ApplyBonabNumbering
+
+% دو صفحه نخست شماره نمایان و لنگر PDF ندارند.
+\hypersetup{pageanchor=false}
+\pagenumbering{gobble}
+\include{frontmatter/besmellah}
+\include{frontmatter/title-fa}
+
+% صفحات مقدماتی با شماره‌گذاری حرفی فارسی
+\preliminarynumbering
+\ifIncludeDedication
+  \include{frontmatter/dedication}
+\fi
+\ifIncludeAcknowledgements
+  \include{frontmatter/acknowledgements}
+\fi
+\include{frontmatter/abstract-fa}
+\ifIncludeSymbols
+  \include{frontmatter/symbols}
+\fi
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\contentsname}
+\tableofcontents
+
+\ifIncludeListOfFigures
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\listfigurename}
+  \listoffigures
+\fi
+
+\ifIncludeListOfTables
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\listtablename}
+  \listoftables
+\fi
+
+\ifIncludeListOfListings
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\lstlistlistingname}
+  \lstlistoflistings
+\fi
+
+% متن اصلی از صفحه ۱ آغاز می‌شود.
+\mainnumbering
+\include{chapters/chapter1}
+\include{chapters/chapter2}
+\include{chapters/chapter3}
+\include{chapters/chapter4}
+\include{chapters/chapter5}
+
+% پیوست اختیاری
+\ifIncludeAppendix
+  \appendix
+  \include{appendices/latex-examples}
+\fi
+
+% منابع
+\cleardoublepage
+\phantomsection
+\chapter*{منابع}
+\addcontentsline{toc}{chapter}{منابع}
+\begin{latin}
+\sloppy
+\hbadness=2500 % عنوان‌های طولانی منابع IEEE هشدار کم‌اهمیت ایجاد نکنند.
+\printbibliography[heading=none]
+\end{latin}
+
+% صفحات انگلیسی پایانی، مطابق ترتیب دستورالعمل دانشگاه
+\ifIncludeEnglishPages
+  \cleardoublepage
+  \hypersetup{pageanchor=false}
+  \pagenumbering{gobble}
+  \include{frontmatter/abstract-en}
+  \include{frontmatter/title-en}
+\fi
+
+\end{document}

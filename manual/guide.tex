@@ -1,0 +1,276 @@
+% !TeX program = xelatex
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[unicode,hidelinks]{hyperref}
+\usepackage{xepersian}
+
+\IfFontExistsTF{Amiri}{\settextfont{Amiri}}{\settextfont{FreeSerif}}
+\IfFontExistsTF{TeX Gyre Termes}{\setlatintextfont{TeX Gyre Termes}}{\setlatintextfont{Latin Modern Roman}}
+
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{2pt}
+\linespread{1.25}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlist[itemize]{label={\ensuremath{\bullet}}}
+\definecolor{guideblue}{RGB}{16,64,120}
+\hypersetup{pdftitle={راهنمای قالب پروژه کارشناسی دانشگاه بناب},pdfauthor={محمد امیر بابازاد}}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  backgroundcolor=\color{black!3},
+  rulecolor=\color{black!20},
+  breaklines=true,
+  showstringspaces=false
+}
+
+\newcommand{\filepath}[1]{\lr{\nolinkurl{#1}}}
+\newcommand{\commandname}[1]{\lr{\texttt{\textbackslash#1}}}
+
+\title{\textbf{دفترچه راهنمای قالب پروژه کارشناسی دانشگاه بناب}}
+\author{ویژه پروژه کارشناسی علوم کامپیوتر\\محمد امیر بابازاد}
+\date{نسخه ۱٫۰ --- شهریور ۱۴۰۵}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vfill
+\begin{center}
+این راهنما روش نصب، اجرا، شخصی‌سازی و رفع خطاهای متداول قالب را توضیح می‌دهد.
+\end{center}
+\vfill
+\newpage
+\tableofcontents
+\newpage
+
+\section{معرفی}
+این قالب برای گزارش پروژه کارشناسی رشته علوم کامپیوتر دانشگاه بناب آماده شده است. قواعد صفحه‌آرایی از دستورالعمل ارسالی دانشگاه استخراج شده‌اند و موارد مخصوص پایان‌نامه تحصیلات تکمیلی، مانند فرم دفاع کارشناسی ارشد، به‌طور پیش‌فرض وارد پروژه کارشناسی نشده‌اند.
+
+فایل اصلی \filepath{main.tex} فقط ترتیب اجزای سند را مشخص می‌کند. مشخصات شخصی در فایل \filepath{config/metadata.tex} قرار دارند. انتخاب قلم در \filepath{config/fonts.tex} و صفحه‌آرایی در \filepath{config/style.tex} نگهداری می‌شود. بنابراین برای استفاده معمول لازم نیست کدهای داخلی قالب تغییر کنند.
+
+\section{شروع سریع}
+\subsection{Overleaf}
+\begin{enumerate}
+  \item فایل ZIP را با گزینه \lr{Upload Project} بارگذاری کنید.
+  \item در \lr{Menu}، کامپایلر را روی \lr{XeLaTeX} قرار دهید.
+  \item فایل اصلی را \filepath{main.tex} انتخاب کنید.
+  \item گزینه \lr{Recompile from scratch} را اجرا کنید.
+\end{enumerate}
+
+\subsection{ویندوز}
+پس از نصب کامل \lr{TeX Live} یا \lr{MiKTeX}، فایل \filepath{build.bat} را اجرا کنید. این فایل چهار مرحله لازم را خودکار انجام می‌دهد.
+
+\subsection{لینوکس و macOS}
+\begin{latin}
+\begin{lstlisting}
+chmod +x build.sh
+./build.sh
+\end{lstlisting}
+\end{latin}
+
+روش جایگزین برای همه سیستم‌ها:
+\begin{latin}
+\begin{lstlisting}
+latexmk -C
+latexmk -xelatex main.tex
+\end{lstlisting}
+\end{latin}
+
+فقط یک بار اجرای \lr{XeLaTeX} کافی نیست. منابع به \lr{Biber} و فهرست‌ها و ارجاع‌ها به چند اجرای \lr{XeLaTeX} نیاز دارند.
+
+\section{ساختار پروژه}
+\begin{longtable}{>{\raggedleft\arraybackslash}p{0.36\textwidth}p{0.54\textwidth}}
+\toprule
+\textbf{مسیر} & \textbf{کاربرد}\\
+\midrule
+\filepath{main.tex} & ترتیب صفحات و فصل‌ها\\
+\filepath{config/metadata.tex} & مشخصات دانشجو و بخش‌های اختیاری\\
+\filepath{config/fonts.tex} & قلم‌های رسمی و جایگزین\\
+\filepath{config/style.tex} & اندازه‌ها، شماره‌گذاری و ظاهر\\
+\filepath{frontmatter/} & صفحات مقدماتی و انگلیسی\\
+\filepath{chapters/} & متن فصل‌ها\\
+\filepath{appendices/} & پیوست‌های اختیاری\\
+\filepath{assets/} & لوگو و تصاویر\\
+\filepath{references.bib} & منابع کتاب‌شناختی\\
+\bottomrule
+\end{longtable}
+
+\section{تغییر اطلاعات پروژه}
+برای ویرایش عنوان، نام دانشجو و استاد فقط \filepath{config/metadata.tex} را تغییر دهید:
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\newcommand{\ProjectTitleFa}{Persian Project Title}
+\newcommand{\ProjectTitleEn}{English Project Title}
+\newcommand{\StudentNameFa}{Persian Student Name}
+\newcommand{\StudentNumber}{Student Number}
+\newcommand{\SupervisorNameFa}{Persian Supervisor Name}
+\end{lstlisting}
+\end{latin}
+
+فقط متن داخل آکولادها تغییر کند. نام فرمان و آکولادها نباید حذف شوند.
+
+\section{فعال و غیرفعال کردن اجزا}
+در انتهای \filepath{config/metadata.tex} کلیدهای زیر وجود دارند:
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\IncludeDedicationtrue
+\IncludeAcknowledgementstrue
+\IncludeSymbolstrue
+\IncludeListOfFigurestrue
+\IncludeListOfTablestrue
+\IncludeListOfListingstrue
+\IncludeAppendixfalse
+\IncludeEnglishPagestrue
+\end{lstlisting}
+\end{latin}
+
+برای حذف یک بخش، \lr{true} به \lr{false} تبدیل شود. اگر فهرست شکل یا جدول خالی است، کلید مربوط به آن غیرفعال شود.
+
+\section{افزودن فصل}
+یک فایل جدید مانند \filepath{chapters/chapter6.tex} بسازید:
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\chapter{Persian Chapter Title}
+\label{chap:new}
+
+\section{Persian Section Title}
+Persian chapter text.
+\end{lstlisting}
+\end{latin}
+
+سپس در \filepath{main.tex} اضافه کنید:
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\include{chapters/chapter6}
+\end{lstlisting}
+\end{latin}
+
+\section{متن فارسی و لاتین}
+فونت‌های قدیمی فارسی همه حروف لاتین را ندارند. هر اصطلاح لاتین در پاراگراف فارسی باید داخل \commandname{lr} نوشته شود:
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+Persian text \lr{PINN} Persian text \lr{PyTorch}.
+\end{lstlisting}
+\end{latin}
+
+برای پاراگراف کاملاً انگلیسی از محیط \lr{latin} استفاده شود. رعایت این قاعده از نمایش مربع جلوگیری می‌کند.
+
+\section{منابع و ارجاع}
+اطلاعات منبع در \filepath{references.bib} ثبت می‌شود. در متن فارسی از \commandname{pcite} استفاده کنید:
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\pcite{raissi2019pinns}
+\end{lstlisting}
+\end{latin}
+
+این فرمان شماره و براکت را با قلم لاتین کامل حروف‌چینی می‌کند. در متن کاملاً انگلیسی، \commandname{cite} معمولی مناسب است.
+
+\section{شکل، جدول و رابطه}
+\subsection{شکل}
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.75\textwidth]{figure.pdf}
+  \caption{Persian figure caption}
+  \label{fig:sample}
+\end{figure}
+\end{lstlisting}
+\end{latin}
+عنوان شکل پایین آن قرار می‌گیرد.
+
+\subsection{جدول}
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\begin{table}[H]
+  \centering
+  \caption{Persian table caption}
+  \label{tab:sample}
+  \begin{tabular}{lc}
+    \toprule
+    Method & Error \\
+    \midrule
+    PINN & 0.01 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\end{lstlisting}
+\end{latin}
+عنوان جدول باید بالای آن باشد.
+
+\subsection{رابطه}
+\begin{latin}
+\begin{lstlisting}[language=TeX]
+\begin{equation}
+  E = mc^2
+  \label{eq:energy}
+\end{equation}
+\end{lstlisting}
+\end{latin}
+ارجاع با \commandname{eqref} انجام می‌شود. رابطه از چپ و شماره آن از راست قرار می‌گیرد.
+
+\section{کد برنامه‌نویسی}
+کد و عنوان انگلیسی آن باید چپ‌به‌راست باشند:
+\begin{latin}
+\begin{verbatim}
+\begin{latin}
+\begin{lstlisting}[caption={\protect\lr{Python example}},
+                  label={lst:python}]
+print("Hello")
+\end{lstlisting}
+\end{latin}
+\end{verbatim}
+\end{latin}
+
+استفاده از \commandname{lr} در عنوان، از وارونه‌شدن آن در فهرست کدها جلوگیری می‌کند.
+
+\section{قلم‌ها و مربع‌های ناخوانا}
+ترتیب قلم‌ها در \filepath{config/fonts.tex} مشخص است. B Mitra برای متن، B Nazanin برای بخش، B Titr برای فصل و Times New Roman برای انگلیسی در اولویت‌اند. در نبود آن‌ها قلم آزاد جایگزین می‌شود.
+
+B Mitra نباید برای اعداد و نمادهای ریاضی انتخاب شود، زیرا بعضی نویسه‌های لازم \lr{unicode-persianmath} را ندارد. قالب برای ریاضیات از Amiri یا قلم کامل دیگر استفاده می‌کند. گلوله فهرست‌ها نیز از فونت ریاضی ساخته می‌شود و به B Mitra وابسته نیست.
+
+\section{قواعد اعمال‌شده از دستورالعمل}
+\begin{itemize}
+  \item کاغذ A4 و حاشیه ۲٫۵ سانتی‌متر؛
+  \item متن ۱۴ پوینت با فاصله خط ۱٫۵؛
+  \item تورفتگی ۱٫۲۵ سانتی‌متر؛
+  \item عنوان فصل ۱۶ پوینت، پررنگ و وسط‌چین؛
+  \item عنوان بخش ۱۴ پوینت، پررنگ و مایل؛
+  \item عنوان شکل و جدول ۱۰ پوینت؛
+  \item صفحات مقدماتی با حروف فارسی و متن اصلی از صفحه ۱؛
+  \item شماره‌گذاری فصل‌محور با خط تیره؛
+  \item عنوان جدول در بالا و عنوان شکل در پایین؛
+  \item چکیده فارسی و انگلیسی و ۵ تا ۱۰ کلیدواژه.
+\end{itemize}
+
+رنگ جلد، صحافی و صفحه سفید پس از جلد، الزامات نسخه فیزیکی هستند و باید هنگام تحویل با گروه آموزشی کنترل شوند.
+
+\section{رفع اشکال}
+\subsection{فهرست خالی یا علامت سؤال}
+کامپایل چندمرحله‌ای کامل نشده است. \filepath{build.bat}، \filepath{build.sh} یا \lr{latexmk} استفاده شود.
+
+\subsection{مربع به‌جای اصطلاح لاتین}
+اصطلاح بیرون از \commandname{lr} نوشته شده است یا یک عنوان انگلیسی با فونت فارسی ساخته شده است.
+
+\subsection{مربع در ارجاع}
+\lr{Biber} اجرا نشده یا در متن فارسی از \commandname{cite} به‌جای \commandname{pcite} استفاده شده است.
+
+\subsection{خطای B Mitra و U+066A}
+نسخه قدیمی \filepath{config/fonts.tex} در حال استفاده است. پروژه جدید در پوشه‌ای تازه باز شود و فایل‌های کمکی قبلی حذف شوند.
+
+\section{کنترل نهایی}
+پیش از تحویل، PDF از ابتدا بازسازی شود و موارد زیر کنترل شوند:
+\begin{itemize}
+  \item نبود مربع، کلید خام منبع و `؟؟`؛
+  \item تکمیل فهرست‌ها و منابع؛
+  \item ارجاع همه شکل‌ها و جدول‌ها در متن؛
+  \item واقعی‌بودن همه نتایج و نمودارها؛
+  \item یکسان‌بودن مفهوم چکیده فارسی و انگلیسی؛
+  \item هماهنگی نسخه چاپی با آخرین نظر گروه آموزشی.
+\end{itemize}
+
+\end{document}

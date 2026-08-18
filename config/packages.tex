@@ -1,0 +1,60 @@
+% بسته‌های پایه و صفحه‌آرایی
+\usepackage{iftex}
+\ifXeTeX\else
+  \PackageError{BonabTemplate}{This template must be compiled with XeLaTeX}{Select XeLaTeX as the compiler.}
+\fi
+
+\usepackage[
+  a4paper,
+  top=2.5cm,
+  bottom=2.5cm,
+  left=2.5cm,
+  right=2.5cm,
+  footskip=1.25cm
+]{geometry}
+
+\usepackage{graphicx}
+\graphicspath{{assets/}{figures/}}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{upquote}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+
+% مدیریت منابع به سبک IEEE
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=ieee,
+  sorting=none,
+  giveninits=true,
+  maxbibnames=99,
+  doi=true,
+  url=true,
+  isbn=false
+]{biblatex}
+\addbibresource{references.bib}
+
+% پیوندهای PDF؛ برای چاپ، پیوندها بدون رنگ و کادر هستند.
+\usepackage[
+  unicode=true,
+  hidelinks,
+  pdfencoding=auto
+]{hyperref}
+\usepackage{bookmark}
+
+% زی‌پرشین باید پس از بیشتر بسته‌ها فراخوانی شود.
+\usepackage{xepersian}

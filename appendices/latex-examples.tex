@@ -1,0 +1,44 @@
+\chapter{نمونه دستورات پرکاربرد LaTeX}
+\label{app:latex-examples}
+
+این پیوست به‌طور پیش‌فرض غیرفعال است. برای نمایش آن، مقدار
+\lr{\textbackslash IncludeAppendixtrue}
+را در فایل \lr{config/metadata.tex} قرار دهید.
+
+\section{ارجاع به منبع}
+برای ارجاع عددی از دستور زیر استفاده کنید:
+\begin{latin}
+\begin{verbatim}
+\cite{raissi2019pinns}
+\end{verbatim}
+\end{latin}
+
+\section{درج شکل}
+\begin{latin}
+\begin{verbatim}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{my-figure.pdf}
+  \caption{Figure caption}
+  \label{fig:my-figure}
+\end{figure}
+\end{verbatim}
+\end{latin}
+
+\section{درج جدول}
+\begin{latin}
+\begin{verbatim}
+\begin{table}[H]
+  \centering
+  \caption{Table caption}
+  \label{tab:my-table}
+  \begin{tabular}{lc}
+    \toprule
+    Parameter & Value \\
+    \midrule
+    Width & 64 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\end{verbatim}
+\end{latin}

@@ -1,0 +1,5 @@
+Bonab Undergraduate Project LaTeX Template
+Version: 1.0.0
+Release date: 2026-08-18
+Default compiler: XeLaTeX
+Bibliography processor: Biber

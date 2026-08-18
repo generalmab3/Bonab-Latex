@@ -1,0 +1,150 @@
+\chapter{پیاده‌سازی و روش ارزیابی}
+\label{chap:implementation}
+
+\section{محیط پیاده‌سازی}
+برای پیاده‌سازی مدل می‌توان از پایتون و کتابخانه پای‌تورچ استفاده کرد. پای‌تورچ امکانات لازم برای تعریف شبکه عصبی، مشتق‌گیری خودکار، بهینه‌سازی و اجرای مدل روی پردازنده مرکزی یا پردازنده گرافیکی را فراهم می‌کند. کتابخانه‌های \lr{NumPy} و \lr{Pandas} برای آماده‌سازی داده و \lr{Matplotlib} برای رسم نمودارها قابل استفاده‌اند.
+
+بهتر است کد پیاده‌سازی نیز ساختاری پیمانه‌ای داشته باشد. یک ساختار پیشنهادی شامل فایل جداگانه برای مدل، داده، تابع هزینه، آموزش و ارزیابی است:
+\begin{latin}
+\begin{verbatim}
+code/
+|-- data.py
+|-- model.py
+|-- losses.py
+|-- train.py
+`-- evaluate.py
+\end{verbatim}
+\end{latin}
+
+\section{اسکلت اولیه مدل در پای‌تورچ}
+کد~\ref{lst:pytorch-model} یک اسکلت کوتاه برای شبکه پیش‌خور ارائه می‌دهد. تعداد ورودی‌ها و خروجی‌ها باید با تعریف‌های روابط~\eqref{eq:model-input} و~\eqref{eq:model-output} هماهنگ شود.
+
+\begin{latin}
+\begin{lstlisting}[caption={\protect\lr{A minimal PyTorch skeleton for the energy PINN}},label={lst:pytorch-model}]
+import torch
+from torch import nn
+
+
+class EnergyPINN(nn.Module):
+    def __init__(self, n_in=6, n_out=4, width=64, depth=4):
+        super().__init__()
+        layers = [nn.Linear(n_in, width), nn.Tanh()]
+        for _ in range(depth - 1):
+            layers += [nn.Linear(width, width), nn.Tanh()]
+        layers += [nn.Linear(width, n_out)]
+        self.network = nn.Sequential(*layers)
+
+    def forward(self, x):
+        return self.network(x)
+
+
+def upper_lower_penalty(z, lower, upper):
+    above = torch.relu(z - upper).pow(2)
+    below = torch.relu(lower - z).pow(2)
+    return (above + below).mean()
+\end{lstlisting}
+\end{latin}
+
+خروجی خام شبکه ممکن است مستقیماً در بازه فیزیکی موردنظر قرار نگیرد. برای رفع این مسئله می‌توان از تابع جریمه، برش خروجی یا تبدیل‌هایی مانند سیگموید استفاده کرد. انتخاب روش باید با ماهیت قید و نیاز کاربرد هماهنگ باشد.
+
+\section{محاسبه باقیمانده‌های فیزیکی}
+کد~\ref{lst:physics-loss} نمونه‌ای از محاسبه باقیمانده توازن توان و پویایی باتری را نشان می‌دهد. نام کلیدهای داده صرفاً یک قرارداد برنامه‌نویسی است و می‌تواند تغییر کند.
+
+\begin{latin}
+\begin{lstlisting}[caption={\protect\lr{Physics residuals for power balance and battery dynamics}},label={lst:physics-loss}]
+def physics_losses(model, batch, dt, e_max, eta_ch, eta_dis):
+    prediction = model(batch["x"])
+    p_grid, p_ch, p_dis, soc_next = prediction.split(1, dim=1)
+
+    power_residual = (
+        p_grid + batch["p_pv"] + p_dis
+        - p_ch - batch["p_load"]
+    )
+
+    expected_soc = (
+        batch["soc"]
+        + eta_ch * p_ch * dt / e_max
+        - p_dis * dt / (eta_dis * e_max)
+    )
+    soc_residual = soc_next - expected_soc
+
+    loss_power = power_residual.pow(2).mean()
+    loss_soc = soc_residual.pow(2).mean()
+    loss_bounds = upper_lower_penalty(
+        soc_next, batch["soc_min"], batch["soc_max"]
+    )
+    return prediction, loss_power, loss_soc, loss_bounds
+\end{lstlisting}
+\end{latin}
+
+اگر مدل شامل یک معادله دیفرانسیل پیوسته باشد، لازم است ورودی متناظر با زمان دارای گزینه \lr{requires\_grad} باشد و مشتق خروجی با \lr{torch.autograd.grad} محاسبه شود. برای روابط گسسته این فصل، محاسبه مستقیم باقیمانده کافی است.
+
+\section{آماده‌سازی داده}
+داده باید حداقل شامل زمان، بار، تولید خورشیدی، وضعیت شارژ و در صورت استفاده، قیمت خرید و فروش باشد. مراحل پیشنهادی آماده‌سازی عبارت‌اند از:
+\begin{enumerate}
+  \item بررسی داده‌های گمشده و مقادیر غیرممکن؛
+  \item یکسان‌سازی واحدها، گام زمانی و قرارداد علامت توان؛
+  \item تقسیم زمانی داده به مجموعه آموزش، اعتبارسنجی و آزمون؛
+  \item محاسبه پارامترهای نرمال‌سازی فقط از مجموعه آموزش؛
+  \item نگهداری ترتیب زمانی و جلوگیری از نشت اطلاعات آینده؛
+  \item ثبت بذر تصادفی و نسخه کتابخانه‌ها برای تکرارپذیری.
+\end{enumerate}
+
+اگر داده واقعی در دسترس نباشد، می‌توان یک شبیه‌ساز ساده ساخت و داده مصنوعی تولید کرد. در این حالت، معادلات تولید داده، حدود متغیرها و نحوه ایجاد نویز باید به‌صورت شفاف در گزارش نوشته شوند.
+
+\section{مدل‌های مورد مقایسه}
+برای سنجش اثر مؤلفه فیزیکی، حداقل دو مدل با معماری یکسان پیشنهاد می‌شود:
+\begin{enumerate}
+  \item \textbf{شبکه عصبی داده‌محور:} آموزش فقط با $\mathcal{L}_{\mathrm{data}}$؛
+  \item \textbf{شبکه عصبی فیزیک‌آگاه:} آموزش با تابع هزینه کامل رابطه~\eqref{eq:total-loss}.
+\end{enumerate}
+در صورت امکان، یک روش بهینه‌سازی کلاسیک نیز می‌تواند به‌عنوان مرجع افزوده شود. مقایسه منصفانه مستلزم استفاده از داده، معماری، بودجه آموزش و مجموعه آزمون یکسان است.
+
+\section{معیارهای ارزیابی}
+برای خطای پیش‌بینی می‌توان از میانگین مربع خطا استفاده کرد:
+\begin{equation}
+  \mathrm{MSE}=\frac{1}{N}\sum_{i=1}^{N}
+  \left\|\hat{\bm{y}}_i-\bm{y}_i\right\|_2^2.
+  \label{eq:mse}
+\end{equation}
+معیار باقیمانده فیزیکی می‌تواند میانگین قدر مطلق توازن توان باشد:
+\begin{equation}
+  E_{P}=\frac{1}{N}\sum_{i=1}^{N}|r_P(t_i)|.
+  \label{eq:physics-metric}
+\end{equation}
+نرخ نقض قید نیز از نسبت نمونه‌هایی که دست‌کم یک حد فیزیکی را نقض می‌کنند به کل نمونه‌ها به دست می‌آید:
+\begin{equation}
+  R_{v}=\frac{N_{\mathrm{violated}}}{N}\times 100.
+  \label{eq:violation-rate}
+\end{equation}
+برای مسئله مدیریت انرژی، هزینه کل بهره‌برداری و زمان استنتاج نیز معیارهای مهمی هستند. گزارش نهایی باید میانگین چند اجرای مستقل، پراکندگی نتایج و تنظیمات سخت‌افزاری را بیان کند.
+
+\section{طرح آزمایش}
+یک طرح آزمایش مناسب می‌تواند شامل مراحل زیر باشد:
+\begin{enumerate}
+  \item آموزش مدل داده‌محور و فیزیک‌آگاه با تقسیم داده یکسان؛
+  \item تنظیم وزن‌های تابع هزینه با مجموعه اعتبارسنجی؛
+  \item ارزیابی روی داده آزمون دیده‌نشده؛
+  \item بررسی عملکرد در حضور نویز یا کاهش تعداد داده‌های آموزش؛
+  \item تحلیل حساسیت نسبت به وزن فیزیکی $\lambda_P$؛
+  \item گزارش دقت، نقض قیود، هزینه و زمان اجرا.
+\end{enumerate}
+
+% جدول زیر پس از اجرای واقعی آزمایش‌ها قابل فعال‌سازی است.
+% برای نمایش، علامت درصد ابتدای خطوط را حذف کنید و اعداد واقعی را بنویسید.
+% \begin{table}[H]
+%   \centering
+%   \caption{مقایسه نتایج مدل‌های مورد بررسی}
+%   \label{tab:real-results}
+%   \begin{tabular}{lcccc}
+%     \toprule
+%     مدل & MSE & باقیمانده توان & نقض قید (درصد) & هزینه \\
+%     \midrule
+%     شبکه داده‌محور &  &  &  &  \\
+%     شبکه فیزیک‌آگاه &  &  &  &  \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+\section{نحوه گزارش نتایج}
+پس از انجام آزمایش، برای هر نمودار یا جدول باید داده، واحد، تنظیمات مدل و تعداد اجراها مشخص شود. نتایج مدل‌های دیگر یا مقادیر گزارش‌شده در مقاله‌های مبنا نباید به‌عنوان خروجی پیاده‌سازی حاضر ارائه شوند. اگر یک شکل یا جدول از منبع دیگری اقتباس شود، مرجع آن باید در عنوان یا متن مجاور ذکر شود.
