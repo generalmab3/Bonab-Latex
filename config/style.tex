@@ -1,5 +1,10 @@
-% اندازه و فاصله متن اصلی مطابق دستورالعمل دانشگاه
-\AtBeginDocument{\fontsize{14pt}{21pt}\selectfont}
+% اندازه و فاصله متن اصلی مطابق دستورالعمل دانشگاه.
+% باید \normalsize بازنویسی شود؛ در غیر این صورت پس از فصل، بخش و
+% بسیاری از محیط‌ها لاتک به ۱۲ پوینت کلاس report برمی‌گردد.
+\renewcommand{\normalsize}{\fontsize{14pt}{21pt}\selectfont}
+\renewcommand{\small}{\fontsize{12pt}{18pt}\selectfont}
+\renewcommand{\footnotesize}{\fontsize{10pt}{15pt}\selectfont}
+\AtBeginDocument{\normalsize}
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{0pt}
 \setlength{\emergencystretch}{2em}
@@ -136,9 +141,10 @@
 \newcommand{\pcite}[1]{\lr{\cite{#1}}}
 
 \newcommand{\unnumberedchapter}[1]{%
-  \chapter*{#1}%
-  \phantomsection%
+  \cleardoublepage
+  \phantomsection
   \addcontentsline{toc}{chapter}{#1}%
+  \chapter*{#1}%
 }
 \newcommand{\preliminarynumbering}{%
   \cleardoublepage

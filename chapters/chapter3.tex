@@ -8,13 +8,14 @@
 
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[node distance=1.2cm and 1.3cm]
-    \node[block] (data) {داده‌های ریزشبکه\\بار، خورشید، قیمت و \lr{SOC}};
-    \node[block, left=of data] (net) {شبکه عصبی\\$\hat{\bm{y}}_{\theta}$};
-    \node[block, left=of net] (out) {تصمیم‌های انرژی\\شبکه، شارژ و دشارژ};
-    \node[loss, below=of net] (physics) {باقیمانده‌های فیزیکی\\توازن توان و باتری};
-    \node[loss, left=of physics] (total) {تابع هزینه کل\\$\mathcal{L}(\theta)$};
-    \node[block, below=of total] (opt) {بهینه‌ساز\\\lr{Adam / L-BFGS}};
+  \begin{tikzpicture}
+    % مختصات مطلق تا bidi جهت left/of را در سند راست‌به‌چپ وارونه نکند.
+    \node[block] (data) at (7.8,0) {داده‌های ریزشبکه\\بار، خورشید، قیمت و \lr{SOC}};
+    \node[block] (net) at (3.4,0) {شبکه عصبی\\$\hat{\bm{y}}_{\theta}$};
+    \node[block] (out) at (-1.0,0) {تصمیم‌های انرژی\\شبکه، شارژ و دشارژ};
+    \node[loss] (physics) at (3.4,-2.2) {باقیمانده‌های فیزیکی\\توازن توان و باتری};
+    \node[loss] (total) at (-1.0,-2.2) {تابع هزینه کل\\$\mathcal{L}(\theta)$};
+    \node[block] (opt) at (-1.0,-4.4) {بهینه‌ساز\\\lr{Adam / L-BFGS}};
 
     \draw[flow] (data) -- (net);
     \draw[flow] (net) -- (out);
