@@ -59,6 +59,7 @@ references.bib            منابع
 - جدول تطبیق با دستورالعمل دانشگاه: `docs/COMPLIANCE.md`
 - گزارش آزمون فنی: `VALIDATION.md`
 - راهنمای ارائه و دفاع: `docs/DEFENSE.md`
+- آزمایش مصنوعی: `code/simulate.py`
 
 ## نکات ضروری
 

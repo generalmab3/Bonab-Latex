@@ -1,0 +1,19 @@
+{
+  "seed": 7,
+  "hours_total": 504,
+  "hours_test": 102,
+  "dt_h": 1.0,
+  "e_max_kwh": 20.0,
+  "data_driven": {
+    "mse": 0.00985540428621428,
+    "power_residual": 0.0819511378680677,
+    "violation_pct": 47.05882352941176,
+    "cost": 0.3042667234305996
+  },
+  "physics_informed": {
+    "mse": 0.016677563789556378,
+    "power_residual": 0.0330694716215089,
+    "violation_pct": 21.568627450980394,
+    "cost": 0.3005837018263986
+  }
+}

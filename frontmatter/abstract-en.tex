@@ -11,7 +11,7 @@ This undergraduate project combines two research streams in a controlled way. Th
 
 The baseline system contains photovoltaic generation, a battery, a local load, and bidirectional exchange with the main grid. A feed-forward network is proposed and a Python/PyTorch implementation path is specified. The game-theoretic layer is treated as an optional extension for profit sharing, not as a completed numerical claim of the present version.
 
-The report therefore supplies the theoretical frame, the equations, the experimental protocol, and a code skeleton. No numerical finding is stated before a real experiment is run. That separation is also the correct stance for the oral defense.
+A 21-day hourly simulator with a fixed seed was executed. On the held-out test hours the physics-informed model reduced the power-balance residual and the state-of-charge violation rate relative to a data-driven network, at a modest cost in mean squared error. The finding is limited to this synthetic set; the bargaining layer is not part of the numerical experiment.
 
 \vspace{0.6cm}
 \noindent\textbf{Keywords:} \KeywordsEn
