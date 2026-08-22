@@ -1,7 +1,7 @@
 \chapter{پیاده‌سازی و روش ارزیابی}
 \label{chap:implementation}
 
-\section{موضع این فصل}
+\section{مقدمه فصل}
 آزمایش روی داده مصنوعی، با بذر ۷، در پرونده \lr{code/simulate.py} اجرا شده است. عددها از \lr{code/results/metrics.json} آمده‌اند، نه از مقاله‌های مبنا. پیاده‌سازی گزارش‌شده با \lr{NumPy} است. قطعه پای‌تورچ فقط مسیر جایگزین را نشان می‌دهد و در تولید جدول~\ref{tab:real-results} استفاده نشده است.
 
 \section{محیط نرم‌افزاری}
@@ -145,7 +145,7 @@ def physics_losses(model, batch, dt, e_max, eta_ch, eta_dis):
   \label{fig:power-residual}
 \end{figure}
 
-\section{خوانش محدود نتایج}
+\section{بحث}
 این آزمایش یک ریزشبکه مصنوعی تک‌سایت است و برتری را در جهان واقعی ثابت نمی‌کند. قیدها نرم‌اند؛ به همین دلیل نقض حدود صفر نشده است. تنظیم اجرا در جدول~\ref{tab:initial-settings} آمده است. برای بازتولید:
 
 \begin{latin}
@@ -154,5 +154,5 @@ python code/simulate.py
 \end{verbatim}
 \end{latin}
 
-\section{جمع‌بندی اجرایی}
+\section{خلاصه}
 داده مصنوعی است، قاعده تولید و بذر مشخص است، و افزایش \lr{MSE} در مدل فیزیک‌آگاه با نویزی‌بودن برچسب آموزش سازگار است. کد اجرا در پوشه \lr{code} است.

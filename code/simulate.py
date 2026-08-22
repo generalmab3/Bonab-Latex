@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synthetic microgrid experiment: data-driven MLP vs physics-informed MLP."""
+"""Hourly microgrid toy model and two MLP trainers."""
 
 from __future__ import annotations
 
@@ -186,18 +186,14 @@ def train(model: MLP, x, y, physics: bool, rng: np.random.Generator):
             gy = (2.0 / len(xb)) * diff
             if physics:
                 r_p, r_s, r_b = physics_terms(xb, yhat)
-                # d L_p / d y : r_p depends on p_grid(+), p_ch(-), p_dis(+)
                 gp = np.zeros_like(yhat)
                 coef = 2.0 / len(xb)
                 gp[:, 0] += coef * r_p
                 gp[:, 1] += -coef * r_p
                 gp[:, 2] += coef * r_p
-                gp[:, 1] += coef * r_s * (ETA_CH * DT / E_MAX) * (-1.0) * (-1.0)
-                # r_s = soc_next - (soc + eta_ch p_ch dt/E - p_dis dt/(eta E))
                 gp[:, 3] += coef * r_s
                 gp[:, 1] += coef * r_s * (-ETA_CH * DT / E_MAX)
                 gp[:, 2] += coef * r_s * (DT / (ETA_DIS * E_MAX))
-                # bounds on soc_next
                 over = np.maximum(0.0, yhat[:, 3] - SOC_MAX)
                 under = np.maximum(0.0, SOC_MIN - yhat[:, 3])
                 gp[:, 3] += 6.0 * coef * (over - under)
@@ -256,7 +252,7 @@ def main():
     series = make_profiles(24 * 21, rng)
     x = stack_x(series)
     y = stack_y(series)
-    # Corrupt a subset of training labels so the physics term has work to do.
+    # label noise on the training split only
     n = len(x)
     n_train, n_val = int(0.60 * n), int(0.20 * n)
     y_obs = y.copy()

@@ -5,13 +5,11 @@
 {\bfseries\fontsize{20pt}{28pt}\selectfont Abstract\par}
 \vspace{1.1cm}
 
-Energy management in a microgrid is a constrained decision problem: local demand must be served, renewable generation should be used effectively, the storage device must remain within admissible limits, and exchange with the utility grid must remain physically and economically meaningful. Classical optimization can enforce these constraints explicitly, yet repeated solution over long horizons or in online settings may be expensive. Purely data-driven neural networks infer quickly, but they do not, by themselves, guarantee power balance or storage limits.
+Operating a microgrid means deciding, at each time step, how to serve the load, whether to charge or discharge the battery, and how much power to exchange with the utility grid. Those decisions have to respect power balance and storage limits. A neural network trained only on examples may fit the labels and still violate the same limits. Classical optimization handles the constraints more directly, but repeatedly solving the program is not always cheap.
 
-This undergraduate project combines two research streams in a controlled way. The first is the physics-informed neural-network framework, in which governing equations enter the training objective. The second is the operational formulation of a grid-connected microgrid, including power variables, storage dynamics, grid exchange, and, at a higher layer, fair profit allocation among participants. The contribution is not a literal translation of those papers. It is a compact, implementable model that mixes a data residual with power-balance, state-of-charge, bound-penalty, and optional economic terms.
+This project uses the idea of physics-informed neural networks: residuals of power balance and battery state-of-charge are added to the training loss. The list of operating variables follows grid-connected energy-management models. Game-theoretic profit sharing among several sites is reviewed but is not part of the numerical test.
 
-The baseline system contains photovoltaic generation, a battery, a local load, and bidirectional exchange with the main grid. A feed-forward network is used. The reported numerical experiment is implemented in Python and NumPy; a PyTorch path is left as a later option. The game-theoretic layer remains an optional extension for profit sharing and is not part of the numerical experiment.
-
-A 21-day hourly simulator with a fixed seed was executed. On the held-out test hours the physics-informed model reduced the power-balance residual and the state-of-charge violation rate relative to a data-driven network, at a modest cost in mean squared error. The finding is limited to this synthetic set; the bargaining layer is not part of the numerical experiment.
+The case study is a small grid-connected microgrid with photovoltaic generation, a battery and a local load. A feed-forward network was programmed in Python. The data come from a twenty-one-day hourly simulator with a fixed seed. On the test hours the physics-informed model reduced the power-balance residual and the bound-violation rate compared with a data-only network, while the mean squared error increased slightly. The observation is limited to this synthetic set.
 
 \vspace{0.6cm}
 \noindent\textbf{Keywords:} \KeywordsEn
