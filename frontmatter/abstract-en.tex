@@ -5,11 +5,11 @@
 {\bfseries\fontsize{20pt}{28pt}\selectfont Abstract\par}
 \vspace{1.1cm}
 
-Operating a microgrid means deciding, at each time step, how to serve the load, whether to charge or discharge the battery, and how much power to exchange with the utility grid. Those decisions have to respect power balance and storage limits. A neural network trained only on examples may fit the labels and still violate the same limits. Classical optimization handles the constraints more directly, but repeatedly solving the program is not always cheap.
+Energy management in a microgrid means deciding, at each hour, how to serve the load, whether to charge or discharge the battery, and how much electricity to buy from or sell to the utility grid. The decisions are not only economic. The powers must remain balanced and the battery state of charge must stay inside an allowed interval. A neural network trained only on examples may follow the labels and still break those rules. Classical optimization usually respects the constraints more firmly, but solving the program again and again is not always cheap.
 
-This project uses the idea of physics-informed neural networks: residuals of power balance and battery state-of-charge are added to the training loss. The list of operating variables follows grid-connected energy-management models. Game-theoretic profit sharing among several sites is reviewed but is not part of the numerical test.
+This project uses a physics-informed neural network. Residuals of power balance and of battery charge dynamics are added to the same objective that trains the network, together with the usual data error. The operating variables follow grid-connected energy-management models. Profit sharing among several sites, which some papers treat with game theory, is not part of the numerical test.
 
-The case study is a small grid-connected microgrid with photovoltaic generation, a battery and a local load. A feed-forward network was programmed in Python. The data come from a twenty-one-day hourly simulator with a fixed seed. On the test hours the physics-informed model reduced the power-balance residual and the bound-violation rate compared with a data-only network, while the mean squared error increased slightly. The observation is limited to this synthetic set.
+A small microgrid with photovoltaic generation, a battery and a local load was studied. The data came from a twenty-one-day hourly simulator with a fixed random seed. A feed-forward network was programmed in Python. On the test hours the physics-informed model reduced the power-balance residual and the rate of charge-limit violations relative to a data-only network, while the mean squared error increased slightly. The finding holds only for this synthetic set and does not claim superiority in the field.
 
 \vspace{0.6cm}
 \noindent\textbf{Keywords:} \KeywordsEn
