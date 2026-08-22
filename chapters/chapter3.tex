@@ -9,21 +9,21 @@
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
-    \node[block] (data) at (7.8,0) {داده‌های ریزشبکه\\\\بار، خورشید، قیمت و \lr{SOC}};
-    \node[block] (net) at (3.4,0) {شبکه عصبی\\\\$\hat{\bm{y}}_{\theta}$};
-    \node[block] (out) at (-1.0,0) {تصمیم‌های انرژی\\\\شبکه، شارژ و دشارژ};
-    \node[loss] (physics) at (3.4,-2.2) {باقیمانده‌های فیزیکی\\\\توازن توان و باتری};
-    \node[loss] (total) at (-1.0,-2.2) {تابع هزینه کل\\\\$\mathcal{L}(\theta)$};
-    \node[block] (opt) at (-1.0,-4.4) {بهینه‌ساز\\\\\lr{Adam / L-BFGS}};
+    \node[block] (data)     at (0,0)    {داده ریزشبکه\\بار، خورشید، قیمت و \lr{SOC}};
+    \node[block] (net)      at (0,-2.15){شبکه عصبی\\$\hat{\bm{y}}_{\theta}$};
+    \node[block] (out)      at (0,-4.30){خروجی تصمیم\\توان شبکه، شارژ و دشارژ};
+    \node[loss]  (physics)  at (0,-6.45){باقیمانده فیزیکی\\توازن توان و باتری};
+    \node[loss]  (total)    at (0,-8.60){تابع هزینه\\$\mathcal{L}(\theta)$};
+    \node[block] (opt)      at (0,-10.75){بهینه‌ساز \lr{Adam}};
 
     \draw[flow] (data) -- (net);
     \draw[flow] (net) -- (out);
-    \draw[flow] (out) |- (physics);
+    \draw[flow] (out) -- (physics);
     \draw[flow] (physics) -- (total);
     \draw[flow] (total) -- (opt);
-    \draw[flow] (opt.east) -| (net.south);
+    \draw[flow] (opt.east) -- ++(1.35,0) |- (net.east);
   \end{tikzpicture}
-  \caption{چارچوب مفهومی شبکه عصبی فیزیک‌آگاه برای مدیریت انرژی ریزشبکه}
+  \caption{روند آموزش مدل فیزیک‌آگاه برای بهره‌برداری ریزشبکه}
   \label{fig:pinn-workflow}
 \end{figure}
 
