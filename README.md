@@ -58,6 +58,7 @@ references.bib            منابع
 - سورس LaTeX راهنما: `manual/guide.tex`
 - جدول تطبیق با دستورالعمل دانشگاه: `docs/COMPLIANCE.md`
 - گزارش آزمون فنی: `VALIDATION.md`
+- راهنمای ارائه و دفاع: `docs/DEFENSE.md`
 
 ## نکات ضروری
 
